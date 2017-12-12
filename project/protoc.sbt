@@ -1,11 +1,9 @@
-addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.13")
+addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.17")
 
 resolvers += Resolver.bintrayRepo("beyondthelines", "maven")
 
 libraryDependencies ++= Seq(
-  "com.trueaccord.scalapb" %% "compilerplugin"          % "0.6.7",
-  "beyondthelines"         %% "grpcgatewaygenerator"    % "0.0.5",
-  "beyondthelines"         %% "grpcmonixgenerator"      % "0.0.4",
-  "beyondthelines"         %% "grpcakkastreamgenerator" % "0.0.4"
+  "com.thesamet.scalapb" %% "compilerplugin"          % "0.7.4",
+  "beyondthelines"         %% "grpcmonixgenerator"      % "0.0.8"
 )
 

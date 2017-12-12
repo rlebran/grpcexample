@@ -68,16 +68,18 @@ class RouteGuideMonixClient(host: String, port: Int) {
     )
     stub
       .listFeatures(request)
-      .zipWithIndex
-      .map { case (feature, index) =>
-        logger.info(s"Result #$index: $feature")
-      }
-      .onErrorHandle {
-        case e: StatusRuntimeException =>
-          logger.warning(s"RPC failed: ${e.getStatus}")
-          throw e
-      }
-      .completedL
+      .toListL
+      .map(_ => Unit)
+//      .zipWithIndex
+//      .map { case (feature, index) =>
+//        logger.info(s"Result #$index: $feature")
+//      }
+//      .onErrorHandle {
+//        case e: StatusRuntimeException =>
+//          logger.warning(s"RPC failed: ${e.getStatus}")
+//          throw e
+//      }
+//      .completedL
   }
 
   /**
@@ -141,7 +143,7 @@ object RouteGuideMonixClient extends App {
   val logger: Logger = Logger.getLogger(classOf[RouteGuideMonixClient].getName)
 
   val features: Seq[Feature] = Try {
-    RouteGuidePersistence.parseFeatures(RouteGuidePersistence.defaultFeatureFile)
+    RouteGuidePersistence.parseFeatures()
   } getOrElse {
     logger.warning("Can't load feature list from file")
     Seq.empty

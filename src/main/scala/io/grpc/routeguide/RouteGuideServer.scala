@@ -2,8 +2,6 @@ package io.grpc.routeguide
 
 import java.util.logging.Logger
 
-import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
 import io.grpc.{Server, ServerBuilder}
 
 class RouteGuideServer(server: Server) {
@@ -55,9 +53,7 @@ object RouteGuideServer extends App {
 }
 
 object RouteGuideMonixServer extends App {
-  val features = RouteGuidePersistence.parseFeatures(
-    Thread.currentThread.getContextClassLoader.getResource("route_guide.json")
-  )
+  val features = RouteGuidePersistence.parseFeatures()
   val server = new RouteGuideServer(
     ServerBuilder
       .forPort(8980)
@@ -71,26 +67,4 @@ object RouteGuideMonixServer extends App {
   )
   server.start()
   server.blockUntilShutdown()
-}
-
-object RouteGuideAkkaStreamServer extends App {
-  val features = RouteGuidePersistence.parseFeatures(
-    Thread.currentThread.getContextClassLoader.getResource("route_guide.json")
-  )
-  val system = ActorSystem("RouteGuideAkkaStreamServer")
-  implicit val materializer = ActorMaterializer.create(system)
-
-  val server = new RouteGuideServer(
-    ServerBuilder
-      .forPort(8980)
-      .addService(
-        RouteGuideGrpcAkkaStream.bindService(
-          new RouteGuideAkkaStreamService(features)
-        )
-      )
-      .build()
-  )
-  server.start()
-  server.blockUntilShutdown()
-  system.terminate()
 }
