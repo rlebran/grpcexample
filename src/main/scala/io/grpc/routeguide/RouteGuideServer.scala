@@ -55,9 +55,7 @@ object RouteGuideServer extends App {
 }
 
 object RouteGuideMonixServer extends App {
-  val features = RouteGuidePersistence.parseFeatures(
-    Thread.currentThread.getContextClassLoader.getResource("route_guide.json")
-  )
+  val features = RouteGuidePersistence.parseFeatures()
   val server = new RouteGuideServer(
     ServerBuilder
       .forPort(8980)
